@@ -1,0 +1,5 @@
+[dotenv@17.2.3] injecting env (1) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+🚀 Server running on port 5001
+❌ MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017, connect ECONNREFUSED ::1:27017
+⚠️ Falling back to Local In-Memory MongoDB (PERSISTENT)...
+✅ Local Persistent MongoDB connected successfully at mongodb://127.0.0.1:55662/

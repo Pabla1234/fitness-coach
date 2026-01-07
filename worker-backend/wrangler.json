@@ -1,0 +1,16 @@
+{
+  "name": "fitness-coach-backend",
+  "main": "src/index.js",
+  "compatibility_date": "2024-04-05",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "MONGO_URI": "placeholder_for_deployment",
+    "GEMINI_API_KEY": "placeholder_for_deployment",
+    "BACKUP_API_KEY": "placeholder_for_deployment"
+  }
+}
