@@ -195,8 +195,9 @@ const EXERCISE_DB = {
 };
 
 const generateWorkoutPlan = (goal, preferences, profile) => {
-  const { split, daysPerWeek } = preferences;
-  const experience = profile.experienceLevel; // Beginner, Intermediate, Advanced
+  const split = preferences.split;
+  const daysPerWeek = preferences.days_per_week || preferences.daysPerWeek || 4;
+  const experience = profile.experience_level || profile.experienceLevel || 'Intermediate';
   let schedule = [];
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 

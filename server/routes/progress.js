@@ -1,32 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const ProgressLog = require('../models/ProgressLog');
-const UserProfile = require('../models/UserProfile');
+const db = require('../db');
 
-// Add a new log
-router.post('/add', async (req, res) => {
+// POST /api/progress/add
+router.post('/add', (req, res) => {
   try {
     const { userId, weight, bodyFat, chest, waist, arms, legs, photoUrl, notes } = req.body;
-    
-    const log = new ProgressLog({
-      user: userId,
-      weight,
-      bodyFat,
-      chest, 
-      waist, 
-      arms, 
-      legs, 
-      photoUrl, 
-      notes
-    });
-    
-    await log.save();
 
-    // Optionally update current weight in profile
-    await UserProfile.findOneAndUpdate(
-       { user: userId }, 
-       { currentWeight: weight, bodyFatPercentage: bodyFat }
-    );
+    const log = db.addProgressLog(userId, { weight, bodyFat, chest, waist, arms, legs, photoUrl, notes });
+
+    // Update current weight in profile
+    const profile = db.getProfile(userId);
+    if (profile) {
+      db.upsertProfile(userId, {
+        age: profile.age,
+        gender: profile.gender,
+        height: profile.height,
+        currentWeight: weight,
+        bodyFatPercentage: bodyFat ?? profile.body_fat_percentage,
+        experienceLevel: profile.experience_level,
+      });
+    }
 
     res.json(log);
   } catch (err) {
@@ -35,10 +29,10 @@ router.post('/add', async (req, res) => {
   }
 });
 
-// Get all logs for a user (sorted by date)
-router.get('/:userId', async (req, res) => {
+// GET /api/progress/:userId
+router.get('/:userId', (req, res) => {
   try {
-    const logs = await ProgressLog.find({ user: req.params.userId }).sort({ date: 1 });
+    const logs = db.getProgressLogs(req.params.userId);
     res.json(logs);
   } catch (err) {
     res.status(500).send('Server Error');

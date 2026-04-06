@@ -33,6 +33,21 @@ yarn-error.log*
 .DS_Store
 *.pem
 
+# SQLite
+*.db
+*.db-shm
+*.db-wal
+
+# Logs
+*.log
+*.pid
+
+# Auth data (regenerated on first register)
+auth-backend/data/users.json
+
+# Old MongoDB data
+server/data/db/
+
 # Editor directories and files
 .idea
 .vscode
@@ -41,3 +56,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+server/data/db

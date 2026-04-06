@@ -1,0 +1,36 @@
+services:
+  # ── Main Fitness API (Express + SQLite) ──────────────────────────────────────
+  - type: web
+    name: fitness-coach-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: RAPIDAPI_KEY
+        sync: false
+    disk:
+      name: sqlite-data
+      mountPath: /data
+      sizeGB: 1
+
+  # ── Auth Backend (Express + JWT) ─────────────────────────────────────────────
+  - type: web
+    name: fitness-coach-auth
+    runtime: node
+    rootDir: auth-backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        sync: false
+    disk:
+      name: auth-data
+      mountPath: /data
+      sizeGB: 1

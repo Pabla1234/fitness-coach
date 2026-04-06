@@ -1,9 +1,6 @@
 const OpenAI = require('openai');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-const mongoose = require('mongoose');
-const UserProfile = require('../models/UserProfile');
-const Goal = require('../models/Goal');
-const TrainingPreference = require('../models/TrainingPreference');
+const db = require('../db');
 const { getContextForUser } = require('./fitnessKnowledge');
 
 // 1. Initialize Clients
@@ -24,18 +21,18 @@ const generateSystemPrompt = (profile, goal, prefs) => {
     - Age: ${profile.age}
     - Gender: ${profile.gender}
     - Height: ${profile.height}cm
-    - Weight: ${profile.currentWeight}kg
-    - Experience: ${profile.experienceLevel}
-    
+    - Weight: ${profile.current_weight}kg
+    - Experience: ${profile.experience_level}
+
     User Goal:
-    - Primary Goal: ${goal.primaryGoal}
-    - Target Weight: ${goal.targetWeight}kg
+    - Primary Goal: ${goal.primary_goal}
+    - Target Weight: ${goal.target_weight}kg
     - Timeframe: ${goal.timeframe}
     - Injuries: ${goal.injuries}
-    
+
     Preferences:
     - Split: ${prefs.split}
-    - Days/Week: ${prefs.daysPerWeek}
+    - Days/Week: ${prefs.days_per_week}
     - Environment: ${prefs.environment}
 
     ${expertContext}
@@ -45,7 +42,7 @@ const generateSystemPrompt = (profile, goal, prefs) => {
     - Use the EXPERT KNOWLEDGE BASE provided above to verify your advice.
     - Keep answers concise (under 150 words) and actionable.
     - Be motivating but realistic.
-    - If asked about diet, refer to their goal of ${goal.primaryGoal}.
+    - If asked about diet, refer to their goal of ${goal.primary_goal}.
     - If asked about workouts, refer to their ${prefs.split} split.
   `;
 };
@@ -55,17 +52,17 @@ const getCoachResponse = async (userId, userMessage) => {
     console.log(`🧠 AI Coach Request for User: ${userId}`);
 
     // 0. Validate ID format to prevent crashes
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-        console.warn(`⚠️ Invalid User ID format: ${userId}`);
+    if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+        console.warn(`⚠️ Invalid User ID: ${userId}`);
         return "I can't find your profile. Please try logging in again.";
     }
 
-    // 1. Fetch Context with Error Handling
+    // 1. Fetch Context from SQLite
     let profile, goal, prefs;
     try {
-        profile = await UserProfile.findOne({ user: userId });
-        goal = await Goal.findOne({ user: userId });
-        prefs = await TrainingPreference.findOne({ user: userId });
+        profile = db.getProfile(userId);
+        goal = db.getGoal(userId);
+        prefs = db.getPreferences(userId);
     } catch (dbError) {
         console.error("❌ DB Error fetching user context:", dbError.message);
         return "I'm having trouble accessing your profile. Please try again later.";
@@ -123,7 +120,7 @@ const getCoachResponse = async (userId, userMessage) => {
 
     // --- STRATEGY: FAILSAFE MOCK ---
     console.log("⚠️ All APIs failed. Using Mock Response.");
-    return mockAIResponse(userMessage, goal.primaryGoal);
+    return mockAIResponse(userMessage, goal.primary_goal);
 
   } catch (err) {
     console.error("❌ Critical AI Service Error:", err);
