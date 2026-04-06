@@ -8,9 +8,18 @@
   "observability": {
     "enabled": true
   },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "fitness-coach-db",
+      "database_id": "a67b0bc5-6195-45c0-bfc5-b03f827cac3e",
+      "migrations_dir": "drizzle"
+    }
+  ],
   "vars": {
-    "MONGO_URI": "placeholder_for_deployment",
     "GEMINI_API_KEY": "placeholder_for_deployment",
-    "BACKUP_API_KEY": "placeholder_for_deployment"
+    "BACKUP_API_KEY": "placeholder_for_deployment",
+    "JWT_SECRET": "placeholder_for_deployment",
+    "RAPIDAPI_KEY": "placeholder_for_deployment"
   }
 }

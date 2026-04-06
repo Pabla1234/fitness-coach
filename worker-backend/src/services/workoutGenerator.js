@@ -306,4 +306,4 @@ const generateWorkoutPlan = (goal, preferences, profile) => {
   return schedule;
 };
 
-module.exports = { generateWorkoutPlan };
+export { generateWorkoutPlan };

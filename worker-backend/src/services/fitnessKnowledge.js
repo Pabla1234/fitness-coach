@@ -59,4 +59,4 @@ const getContextForUser = (profile, goal, prefs) => {
   `;
 };
 
-module.exports = { getContextForUser };
+export { getContextForUser };
