@@ -16,10 +16,5 @@
       "migrations_dir": "drizzle"
     }
   ],
-  "vars": {
-    "GEMINI_API_KEY": "placeholder_for_deployment",
-    "BACKUP_API_KEY": "placeholder_for_deployment",
-    "JWT_SECRET": "placeholder_for_deployment",
-    "RAPIDAPI_KEY": "placeholder_for_deployment"
-  }
+  "vars": {}
 }
