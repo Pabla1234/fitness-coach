@@ -57,3 +57,14 @@ server/data/db/
 *.sln
 *.sw?
 server/data/db
+
+# Local agent/editor config (carries account identifiers)
+.claude/
+
+# Local worker secrets
+.dev.vars
+*.dev.vars
+
+# Build output
+.vercel/
+.open-next/

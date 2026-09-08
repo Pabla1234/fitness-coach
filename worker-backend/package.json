@@ -8,11 +8,15 @@
     "deploy": "wrangler deploy"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "drizzle-kit": "^0.31.8",
+    "drizzle-orm": "^0.45.1",
     "itty-router": "^5.0.0",
+    "jose": "^6.2.2",
     "mongoose": "^8.9.3",
-    "openai": "^4.24.1",
-    "@google/generative-ai": "^0.1.3",
-    "cors": "^2.8.5"
+    "openai": "^4.24.1"
   },
   "devDependencies": {
     "wrangler": "^3.111.0"

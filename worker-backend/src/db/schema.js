@@ -67,6 +67,73 @@ export const dietPlans = sqliteTable('diet_plans', {
   generatedAt:    integer('generated_at').default(sql`(strftime('%s', 'now'))`)
 });
 
+export const exerciseLogs = sqliteTable('exercise_logs', {
+  id:           integer('id').primaryKey({ autoIncrement: true }),
+  userId:       text('user_id').references(() => users.id).notNull(),
+  date:         text('date').notNull(),
+  exerciseName: text('exercise_name').notNull(),
+  workoutDay:   text('workout_day'),
+  completed:    integer('completed', { mode: 'boolean' }).default(false),
+  createdAt:    integer('created_at').default(sql`(strftime('%s', 'now'))`)
+});
+
+// ─── Community ────────────────────────────────────────────────────────────────
+
+export const communityPosts = sqliteTable('community_posts', {
+  id:          text('id').primaryKey(),
+  userId:      text('user_id').references(() => users.id).notNull(),
+  /** null for a root post; set for a reply in a thread */
+  parentId:    text('parent_id'),
+  body:        text('body'),
+  imageKey:    text('image_key'),
+  /** Cached vision-model description, so re-reviews don't re-caption */
+  imageCaption: text('image_caption'),
+
+  /** published | pending_review | blocked | removed */
+  status:      text('status').notNull().default('published'),
+  /** Which cascade stage decided: lexicon | embedding | adjudicator | safety | fallback */
+  modStage:    text('mod_stage'),
+  modScore:    real('mod_score'),
+  modTopic:    text('mod_topic'),
+  modReason:   text('mod_reason'),
+  modDetail:   text('mod_detail'),
+
+  likeCount:   integer('like_count').notNull().default(0),
+  replyCount:  integer('reply_count').notNull().default(0),
+  reportCount: integer('report_count').notNull().default(0),
+  createdAt:   integer('created_at').default(sql`(strftime('%s', 'now'))`)
+});
+
+export const postLikes = sqliteTable('post_likes', {
+  id:        integer('id').primaryKey({ autoIncrement: true }),
+  postId:    text('post_id').references(() => communityPosts.id).notNull(),
+  userId:    text('user_id').references(() => users.id).notNull(),
+  createdAt: integer('created_at').default(sql`(strftime('%s', 'now'))`)
+});
+
+export const postReports = sqliteTable('post_reports', {
+  id:        integer('id').primaryKey({ autoIncrement: true }),
+  postId:    text('post_id').references(() => communityPosts.id).notNull(),
+  userId:    text('user_id').references(() => users.id).notNull(),
+  reason:    text('reason'),
+  createdAt: integer('created_at').default(sql`(strftime('%s', 'now'))`)
+});
+
+/** Per-user moderation history — strikes accumulate across posts. */
+export const userModeration = sqliteTable('user_moderation', {
+  userId:          text('user_id').primaryKey().references(() => users.id),
+  /** Violations inside the current window; decays after QUIET_DAYS of good behaviour */
+  strikes:         integer('strikes').notNull().default(0),
+  blockedCount:    integer('blocked_count').notNull().default(0),
+  reviewCount:     integer('review_count').notNull().default(0),
+  publishedCount:  integer('published_count').notNull().default(0),
+  /** ok | flagged | restricted */
+  status:          text('status').notNull().default('ok'),
+  lastViolationAt: integer('last_violation_at'),
+  lastTopic:       text('last_topic'),
+  updatedAt:       integer('updated_at').default(sql`(strftime('%s', 'now'))`)
+});
+
 export const progressLogs = sqliteTable('progress_logs', {
   id:       integer('id').primaryKey({ autoIncrement: true }),
   userId:   text('user_id').references(() => users.id).notNull(),

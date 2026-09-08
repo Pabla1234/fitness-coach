@@ -34,6 +34,34 @@ The backend has been adapted for Cloudflare Workers in the `worker-backend/` dir
    # Paste your API key
    ```
 
+   Optional — enables live YouTube search on the Motivation tab. Without it the
+   app quietly falls back to its curated video library:
+   ```bash
+   npx wrangler secret put YOUTUBE_API_KEY
+   ```
+
+   Required before anyone can moderate the community feed. Without it the
+   review-queue endpoints return 503 rather than being publicly writable:
+   ```bash
+   npx wrangler secret put ADMIN_KEY
+   # then call the queue with:  -H "X-Admin-Key: <that value>"
+   ```
+
+5. Photo posts (optional — text threads work without this):
+   R2 must be enabled once in the Cloudflare dashboard, then:
+   ```bash
+   npx wrangler r2 bucket create fitness-coach-media
+   ```
+   Then rename `"//r2_buckets"` to `"r2_buckets"` in `wrangler.json` and redeploy.
+   Until that's done, uploads return 503 and the composer offers text posts only.
+
+6. Check which AI backend is answering:
+   ```bash
+   curl https://<your-worker>.workers.dev/api/ai/health
+   ```
+   `usingFallback: true` means neither Workers AI nor Gemini responded, so the
+   coach is serving canned advice — fix the binding or set `GEMINI_API_KEY`.
+
 ## 2. Cloudflare Pages (Frontend)
 
 The frontend is in the `client/` directory.

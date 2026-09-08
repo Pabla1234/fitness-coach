@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+/* Enable class-based dark mode (Tailwind v4) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Design tokens ───────────────────────────────────────────────────────── */
+:root {
+  --bg-page:      #f8fafc;
+  --bg-card:      #ffffff;
+  --bg-input:     #f8fafc;
+  --border:       #e2e8f0;
+  --text-primary: #0f172a;
+  --text-muted:   #64748b;
+  --accent:       #6366f1;
+  --accent-glow:  rgba(99,102,241,0.15);
+}
+
+.dark {
+  --bg-page:      #060810;
+  --bg-card:      #0d1117;
+  --bg-input:     #0d1117;
+  --border:       rgba(55,65,90,0.55);
+  --text-primary: #e2e8f0;
+  --text-muted:   #475569;
+  --accent:       #818cf8;
+  --accent-glow:  rgba(129,140,248,0.12);
+}
+
+@theme inline {
+  --color-background: var(--bg-page);
+  --color-foreground: var(--text-primary);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ── Dark scrollbar ──────────────────────────────────────────────────────── */
+.dark ::-webkit-scrollbar        { width: 6px; height: 6px; }
+.dark ::-webkit-scrollbar-track  { background: transparent; }
+.dark ::-webkit-scrollbar-thumb  { background: rgba(99,102,241,0.25); border-radius: 3px; }
+.dark ::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.45); }

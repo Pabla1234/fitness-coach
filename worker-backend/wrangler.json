@@ -16,5 +16,15 @@
       "migrations_dir": "drizzle"
     }
   ],
-  "vars": {}
+  "vars": {},
+  "//r2_buckets": [
+    "Photo posts need R2. Enable R2 once in the Cloudflare dashboard, run",
+    "`npx wrangler r2 bucket create fitness-coach-media`, then rename this key",
+    "to \"r2_buckets\" and redeploy. The code already handles MEDIA being absent:",
+    "uploads return 503 and the composer falls back to text-only threads.",
+    { "binding": "MEDIA", "bucket_name": "fitness-coach-media" }
+  ],
+  "ai": {
+    "binding": "AI"
+  }
 }
